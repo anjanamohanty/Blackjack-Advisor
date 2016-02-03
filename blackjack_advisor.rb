@@ -22,15 +22,45 @@ hard = {5 => {2..11 => "H"},
         20 => {2..11 => "S"},
         21 => {2..11 => "S"}}
 
+soft = {13 => {2..3 => "H", 4..6 => "Dh", 7..11 => "H"},
+        14 => {2..3 => "H", 4..6 => "Dh", 7..11 => "H"},
+        15 => {2..3 => "H", 4..6 => "Dh", 7..11 => "H"},
+        16 => {2..3 => "H", 4..6 => "Dh", 7..11 => "H"},
+        17 => {2..6 => "Dh", 7..11 => "H"},
+        18 => {2 => "S", 3..6 => "Ds", 7..8 => "S", 9..10 => "H", 11 => "S"},
+        19 => {2..5 => "S", 6 => "H", 7..11 => "S"},
+        20 => {2..11 => "S"},
+        21 => {2..11 => "S"}}
+
+pairs = {2 => {2..7 => "P", 8..11 => "H"},
+         3 => {2..8 => "P", 9..11 => "H"},
+         4 => {2..3 => "H", 4..6 => "P", 7..11 => "H"},
+         5 => {2..9 => "Dh", 10..11 => "H"},
+         6 => {2..7 => "P", 8..11 => "H"},
+         7 => {2..8 => "P", 9 => "H", 10 => "S", 11 => "H"},
+         8 => {2..11 => "P"},
+         9 => {2..6 => "P", 7 => "S", 8..9 => "P", 10..11 => "S"},
+         10 => {2..11 => "S"},
+         11 => {2..11 => "P"}
+       }
+
+modes = {"hard" => hard, "soft" => soft, "pairs" => pairs}
+
 puts "Enter your first card: "
-first = gets.chomp.to_i
-user = first
+user_first = gets.chomp
 
 puts "Enter your second card: "
-second = gets.chomp.to_i
-user += second
+user_second = gets.chomp
 
 puts "Please enter the dealer's card: "
 dealer = gets.chomp.to_i
 
-hard[user].select{|x| x === dealer}.each{|range, move| puts "Your optimal move is to #{advice[move]}"}
+if user_first == user_second
+  pairs[user_first].select{|x| x === dealer}.each_value{|move| puts "Your optimal move is to #{advice[move]}"}
+elsif user_first == 11 || user_second == 11
+  user_total = user_first + user_second
+  soft[user_total].select{|x| x === dealer}.each_value{|move| puts "Your optimal move is to #{advice[move]}"}
+else
+  user_total = user_first + user_second
+  hard[user_total].select{|x| x === dealer}.each_value{|move| puts "Your optimal move is to #{advice[move]}"}
+end
