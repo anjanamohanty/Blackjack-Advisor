@@ -1,3 +1,24 @@
+def get_user_cards(number)
+  puts "Enter your first card: " if number == 1
+  puts "Enter your second card: " if number == 2
+
+  input = gets.chomp
+  convert_input(input)
+end
+
+def get_dealer_card
+  puts "Enter the dealer's card: "
+
+  input = gets.chomp
+  convert_input(input)
+end
+
+def convert_input(input)
+  input = 11 if input == "A"
+  input = 10 if (input == "J" || input == "Q" || input == "K")
+  input.to_i
+end
+
 advice = {"H" => "hit",
           "S" => "stand",
           "P" => "split",
@@ -46,14 +67,9 @@ pairs = {2 => {2..7 => "P", 8..11 => "H"},
 
 modes = {"hard" => hard, "soft" => soft, "pairs" => pairs}
 
-puts "Enter your first card: "
-user_first = gets.chomp
-
-puts "Enter your second card: "
-user_second = gets.chomp
-
-puts "Please enter the dealer's card: "
-dealer = gets.chomp.to_i
+user_first = get_user_cards(1)
+user_second = get_user_cards(2)
+dealer = get_dealer_card
 
 if user_first == user_second
   pairs[user_first].select{|x| x === dealer}.each_value{|move| puts "Your optimal move is to #{advice[move]}"}
