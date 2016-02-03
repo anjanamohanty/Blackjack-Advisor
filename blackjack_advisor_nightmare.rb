@@ -1,6 +1,7 @@
 def get_user_cards(number)
   puts "Enter your first card (use J, Q, K or A if you wish): " if number == 1
   puts "Enter your second card (use J, Q, K or A if you wish): " if number == 2
+  puts "What card did you get? " if number >= 3
 
   input = gets.chomp
   convert_input(input)
@@ -19,13 +20,7 @@ def convert_input(input)
   input.to_i
 end
 
-def play_one_deck
-  advice = {"H" => "hit",
-            "S" => "stand",
-            "P" => "split",
-            "Dh" => "double if possible, otherwise hit",
-            "Ds" => "double if possible, otherwise stand"}
-
+def play_one_deck(user_cards, dealer)
   options = {
     "hard" => { 5 => {2..11 => "H"},
                 6 => {2..11 => "H"},
@@ -66,30 +61,66 @@ def play_one_deck
            }
   }
 
-  user_first = get_user_cards(1)
-  user_second = get_user_cards(2)
-  dealer = get_dealer_card
+  user_total = 0
+  user_cards.each { |x| user_total += x }
+  user_pair = 0
 
-  if user_first == user_second
-    return (options["pairs"][user_first].select{|x| x === dealer}.values)[0]
-  elsif user_first == 11 || user_second == 11
-    user_total = user_first + user_second
-    return (options["soft"][user_total].select{|x| x === dealer}.values)[0]
+  if user_total >= 21
+    return "Bust!"
+  elsif has_pair(user_cards) > 0
+    return get_optimal(has_pair(user_cards), dealer, options["pairs"])
+  elsif user_cards.include?(11)
+    return get_optimal(user_total, dealer, options["soft"])
   else
-    user_total = user_first + user_second
-    return (options["hard"][user_total].select{|x| x === dealer}.values)[0]
+    return get_optimal(user_total, dealer, options["hard"])
   end
 end
 
-
-def play_game(decks)
-  return play_one_deck if decks == 1
-  return play_two_decks if decks == 2
-  return play_four_decks if decks >= 4
-  puts "Sorry, you can't play with #{decks} decks" if decks == 3
+def get_optimal(user, dealer, lookup_hash)
+  return (lookup_hash[user].select{|x| x === dealer}.values)[0]
 end
 
-puts "How many decks would you like to play blackjack with?"
-advice = play_game(gets.chomp.to_i)
+def has_pair(user_cards)
+  user_pair = 0
+  if (user_cards.uniq).length < user_cards.length
+    user_cards.each do |x|
+      user_pair = x if user_cards.count(x) > 1
+    end
+    return user_pair
+  else
+    return user_pair
+  end
+end
 
-puts advice
+def play_game
+
+  advice = {"H" => "hit",
+            "S" => "stand",
+            "P" => "split",
+            "Dh" => "double if possible, otherwise hit",
+            "Ds" => "double if possible, otherwise stand"}
+
+  user_cards = []
+  user_cards << get_user_cards(1)
+  user_cards << get_user_cards(2)
+  dealer = get_dealer_card
+
+  optimal = play_one_deck(user_cards, dealer)
+
+  loop do
+    if optimal == "H"
+      puts "Your optimal move is to #{advice[optimal]}"
+      user_cards << get_user_cards(3)
+      optimal = play_one_deck(user_cards, dealer)
+    elsif optimal == "Bust!"
+      puts "Bust!"
+      break
+    else
+      puts "Your optimal move is to #{advice[optimal]}"
+      break
+    end
+  end
+
+end
+
+play_game
