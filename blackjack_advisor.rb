@@ -208,7 +208,7 @@ end
 def play_game(decks)
   play_one_deck if decks == 1
   play_two_decks if decks == 2
-  play_four_decks if decks <= 4
+  play_four_decks if decks >= 4
   puts "Sorry, you can't play with #{decks} decks" if decks == 3
 end
 
