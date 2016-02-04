@@ -1,3 +1,4 @@
+
 def get_user_cards(number)
   puts "Enter your first card (use J, Q, K or A if you wish): " if number == 1
   puts "Enter your second card (use J, Q, K or A if you wish): " if number == 2
