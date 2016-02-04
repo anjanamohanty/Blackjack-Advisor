@@ -4,20 +4,20 @@ def get_user_cards(number)
   puts "Enter your second card (use J, Q, K or A if you wish): " if number == 2
 
   input = gets.chomp
-  convert_input(input)
+  return convert_input(input)
 end
 
 def get_dealer_card
   puts "Enter the dealer's card (use J, Q, K or A if you wish): "
 
   input = gets.chomp
-  convert_input(input)
+  return convert_input(input)
 end
 
 def convert_input(input)
   input = 11 if input == "A"
   input = 10 if (input == "J" || input == "Q" || input == "K")
-  input.to_i
+  return input.to_i
 end
 
 def play_one_deck

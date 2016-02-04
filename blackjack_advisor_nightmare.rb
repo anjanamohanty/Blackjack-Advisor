@@ -4,20 +4,20 @@ def get_user_cards(state)
   puts "What card did you get? " if state == "hit_me"
 
   input = gets.chomp
-  convert_input(input)
+  return convert_input(input)
 end
 
 def get_dealer_card
   puts "Enter the dealer's card (use J, Q, K or A if you wish): "
 
   input = gets.chomp
-  convert_input(input)
+  return convert_input(input)
 end
 
 def convert_input(input)
   input = 11 if input == "A"
   input = 10 if (input == "J" || input == "Q" || input == "K")
-  input.to_i
+  return input.to_i
 end
 
 def get_options
@@ -144,7 +144,7 @@ def get_options
   return options
 end
 
-def play_one_deck(user_cards, dealer, decks)
+def play(user_cards, dealer, decks)
 
   user_total = 0
   user_cards.each { |x| user_total += x }
@@ -179,7 +179,7 @@ def has_pair(user_cards)
   end
 end
 
-def play_game
+def game
 
   advice = {"H" => "hit",
             "S" => "stand",
@@ -195,13 +195,13 @@ def play_game
   user_cards << get_user_cards("second")
   dealer = get_dealer_card
 
-  optimal = play_one_deck(user_cards, dealer, decks)
+  optimal = play(user_cards, dealer, decks)
 
   loop do
     if optimal == "H"
       puts "Your optimal move is to #{advice[optimal]}"
       user_cards << get_user_cards("hit_me")
-      optimal = play_one_deck(user_cards, dealer, decks)
+      optimal = play(user_cards, dealer, decks)
     elsif optimal == "Bust!"
       puts "Bust!"
       break
@@ -213,4 +213,4 @@ def play_game
 
 end
 
-play_game
+game
