@@ -16,7 +16,9 @@ end
 
 def convert_input(input)
   input = 11 if input == "A"
+  input = 11 if input == "a"
   input = 10 if (input == "J" || input == "Q" || input == "K")
+  input = 10 if (input == "j" || input == "q" || input == "k")
   return input.to_i
 end
 
